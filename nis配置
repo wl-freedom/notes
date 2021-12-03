@@ -1,1 +1,20 @@
 
+搭建 NIS 服务
+nis是c/s架构 4台主机
+1台位master 作为服务端  3台 node作为客户端
+服务端：
+  服务端需要安装的软件 rpcbind、ypserv、yppasswdd、ypbind
+  
+  定义nis服务中的域名 master
+  在 /etc/sysconfig/network 文件中 加入 NISDOMAIN=master
+  并在 /etc/rc.local文件中 加入 domainname master 一句，开机脚本中
+  domainname 是用于配置的命令
+  
+  同时为了服务端指定端口启动,即 ypserv 程序，在/etc/sysconfig/network 中加入 YPSERV_ARGS="-p 1011"
+  
+  yppasswdd程序 的配置文件 /etc/sysconfig/yppasswdd  中 加入  YPPASSWDD_ARGS="--port 1012" 以指定端口启动
+  
+  将 rpcbind ypserv yppasswdd 启动
+  
+ 执行 /usr/lib64/yp/ypinit -m 创建资料库
+ make -C /var/yp 将账号信息写入资料库 由 client使用
